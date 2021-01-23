@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TranslationServiceTest {
 
-    private TranslationService translationService;
+    private TranslationService translationService = new TranslationServiceImpl();
 
     @Test
     void shouldTranslateWord()  {
@@ -25,5 +25,11 @@ class TranslationServiceTest {
     void shouldTranslateSentenceAndKeepPunctuation() {
         String translate = translationService.translate("Testowanie, jest ważne!");
         assertEquals(translate, "Testing, is important!");
+    }
+
+    @Test
+    void shouldTranslateWordStartedWithPolishLetter()  {
+        String translate = translationService.translate("śćźż");
+        assertEquals(translate, "Polish letters");
     }
 }

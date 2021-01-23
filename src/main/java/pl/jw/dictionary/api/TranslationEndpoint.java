@@ -10,6 +10,10 @@ import pl.jw.dictionary.service.TranslationService;
 public class TranslationEndpoint {
     private TranslationService translationService;
 
+    public TranslationEndpoint(TranslationService translationService) {
+        this.translationService = translationService;
+    }
+
     @GetMapping("/translate")
     public ResponseEntity getSentenceTranslation(@RequestParam(value = "sentence") String sentence){
         String translatedSentence = translationService.translate(sentence);
