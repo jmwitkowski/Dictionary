@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 public class TranslationServiceImpl implements TranslationService {
 
     @Override
-    public String translate(String sentenceToTranslate) {
+    public String translate(String sentenceToTranslate, boolean wordsInQuoteMode) {
         List<String> translatedSentence = translateSentenceToList(sentenceToTranslate);
-        return createSentence(translatedSentence);
+        return wordsInQuoteMode ? createWordsInQuotesModeSentence(translatedSentence) : createSentence(translatedSentence);
     }
 
     private List<String> translateSentenceToList(String sentence) {
@@ -44,6 +44,20 @@ public class TranslationServiceImpl implements TranslationService {
     private String createSentence(List<String> sentencePartsList) {
         StringBuilder sentenceBuilder = new StringBuilder();
         sentencePartsList.forEach(sentenceBuilder::append);
+        return sentenceBuilder.toString();
+    }
+
+    private String createWordsInQuotesModeSentence(List<String> sentencePartsList) {
+        StringBuilder sentenceBuilder = new StringBuilder();
+        sentencePartsList.forEach(sentencePart -> {
+            if (isWord(sentencePart)) {
+                sentenceBuilder.append("'");
+                sentenceBuilder.append(sentencePart);
+                sentenceBuilder.append("'");
+            } else {
+                sentenceBuilder.append(sentencePart);
+            }
+        });
         return sentenceBuilder.toString();
     }
 

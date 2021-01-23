@@ -15,8 +15,10 @@ public class TranslationEndpoint {
     }
 
     @GetMapping("/translate")
-    public ResponseEntity getSentenceTranslation(@RequestParam(value = "sentence") String sentence){
-        String translatedSentence = translationService.translate(sentence);
+    public ResponseEntity getSentenceTranslation(@RequestParam(value = "sentence") String sentence,
+                                                 @RequestParam(value = "wordsInQuoteMode", defaultValue = "false") boolean wordsInQuoteMode) {
+
+        String translatedSentence = translationService.translate(sentence, wordsInQuoteMode);
         return ResponseEntity.ok(translatedSentence);
     }
 

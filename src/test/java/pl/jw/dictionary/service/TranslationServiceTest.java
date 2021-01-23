@@ -29,25 +29,25 @@ class TranslationServiceTest {
 
     @Test
     void shouldTranslateWord()  {
-        String translate = translationService.translate("Testowanie");
+        String translate = translationService.translate("Testowanie",false);
         assertEquals(translate, "Testing");
     }
 
     @Test
     void shouldTranslateSentence()  {
-        String translate = translationService.translate("Testowanie jest ważne");
+        String translate = translationService.translate("Testowanie jest ważne",false);
         assertEquals(translate, "Testing is important");
     }
 
     @Test
     void shouldTranslateSentenceAndKeepPunctuation() {
-        String translate = translationService.translate("Testowanie, jest ważne!");
+        String translate = translationService.translate("Testowanie, jest ważne!",false);
         assertEquals(translate, "Testing, is important!");
     }
 
     @Test
     void shouldTranslateWordStartedWithPolishLetter()  {
-        String translate = translationService.translate("śćźż");
+        String translate = translationService.translate("śćźż",false);
         assertEquals(translate, "Polish letters");
     }
 }
