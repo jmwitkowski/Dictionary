@@ -11,6 +11,12 @@ import java.util.stream.Collectors;
 @Service
 public class TranslationServiceImpl implements TranslationService {
 
+    private WordUsageCounterService wordUsageCounterService;
+
+    public TranslationServiceImpl(WordUsageCounterService wordUsageCounterService) {
+        this.wordUsageCounterService = wordUsageCounterService;
+    }
+
     @Override
     public String translate(String sentenceToTranslate, boolean wordsInQuoteMode) {
         List<String> translatedSentence = translateSentenceToList(sentenceToTranslate);
@@ -34,6 +40,7 @@ public class TranslationServiceImpl implements TranslationService {
                     .findFirst();
             if (dictionaryKeyOpt.isPresent()) {
                 translatedWord = DictionaryFromJsonFileProvider.DICTIONARY.get(dictionaryKeyOpt.get());
+                wordUsageCounterService.countWordUsage(sentencePart);//record word usage if translated
             }
             return translatedWord.isEmpty() ? "|" + sentencePart + " - not found in dictionary" + "|" : translatedWord;
         } else {

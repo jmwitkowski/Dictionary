@@ -14,7 +14,9 @@ import static org.mockito.Mockito.mock;
 class TranslationServiceTest {
     private DictionaryFromJsonFileProvider dictionaryFromJsonFileProvider = mock(DictionaryFromJsonFileProvider.class);
 
-    private TranslationService translationService = new TranslationServiceImpl();
+    private WordUsageCounterService wordUsageCounterService = mock(WordUsageCounterService.class);
+
+    private TranslationService translationService = new TranslationServiceImpl(wordUsageCounterService);
 
     private Map<String, String> testDictionary = Map.of(
             "Testowanie", "Testing",
@@ -49,5 +51,31 @@ class TranslationServiceTest {
     void shouldTranslateWordStartedWithPolishLetter()  {
         String translate = translationService.translate("śćźż",false);
         assertEquals(translate, "Polish letters");
+    }
+
+    @Test
+    void shouldTranslateWordInWordsInQuoteMode() {
+        String translate = translationService.translate("Testowanie", true);
+        assertEquals(translate, "'Testing'");
+    }
+
+
+    @Test
+    void shouldTranslateSentenceInQuoteMode() {
+        String translate = translationService.translate("Testowanie jest ważne", true);
+        assertEquals(translate, "'Testing' 'is' 'important'");
+    }
+
+
+    @Test
+    void shouldTranslateDespiteLetterCase() {
+        String translate = translationService.translate("testowanie jESt WAżne", false);
+        assertEquals(translate, "Testing is important");
+    }
+
+    @Test
+    void shouldTranslateToWordNotFound() {
+        String translate = translationService.translate("Słowa spoza słownika", false);
+        assertEquals(translate, "|Słowa - not found in dictionary| |spoza - not found in dictionary| |słownika - not found in dictionary|");
     }
 }
