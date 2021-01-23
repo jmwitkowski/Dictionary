@@ -1,20 +1,15 @@
 package pl.jw.dictionary.service;
 
 import org.springframework.stereotype.Service;
+import pl.jw.dictionary.utils.DictionaryFromJsonFileProvider;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class TranslationServiceImpl implements TranslationService {
-    private Map<String, String> tmpDictionary = Map.of(
-            "Testowanie", "Testing",
-            "jest", "is",
-            "ważne", "important",
-            "śćźż", "Polish letters");//TODO needed to provide dictionary from file
 
     @Override
     public String translate(String sentenceToTranslate) {
@@ -32,13 +27,13 @@ public class TranslationServiceImpl implements TranslationService {
     private String translateSingleWord(String sentencePart) {
         if (isWord(sentencePart)) {
             String translatedWord = "";
-            Optional<String> dictionaryKeyOpt = tmpDictionary
+            Optional<String> dictionaryKeyOpt = DictionaryFromJsonFileProvider.DICTIONARY
                     .keySet()
                     .stream()
                     .filter(key -> key.toLowerCase().equals(sentencePart.toLowerCase()))
                     .findFirst();
             if (dictionaryKeyOpt.isPresent()) {
-                translatedWord = tmpDictionary.get(dictionaryKeyOpt.get());
+                translatedWord = DictionaryFromJsonFileProvider.DICTIONARY.get(dictionaryKeyOpt.get());
             }
             return translatedWord.isEmpty() ? "|" + sentencePart + " - not found in dictionary" + "|" : translatedWord;
         } else {
